@@ -17,29 +17,27 @@ const playerRows = [
   [
     'name',
     'age',
+    'position',
     'athlete',
     'offense',
     'defense',
-    'position',
     'potential',
-    'overall',
+    // 'overall',
     'rating',
     'report',
   ],
-  ...players
-    .sort((a, b) => b.scoutRating - a.scoutRating)
-    .map(p => [
-      p.name,
-      p.age,
-      p.athlete,
-      p.offense,
-      p.defense,
-      p.position,
-      p.potential,
-      p.overall,
-      p.rating,
-      p.report,
-    ]),
+  ...players.sort((a, b) => b.scoutRating - a.scoutRating).map(p => [
+    p.name,
+    p.age,
+    p.position,
+    p.athlete,
+    p.offense,
+    p.defense,
+    p.potential,
+    // p.overall,
+    p.rating,
+    p.report,
+  ]),
 ]
 
 add(table(playerRows))
