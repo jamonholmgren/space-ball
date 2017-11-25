@@ -1,13 +1,10 @@
 const body = document.body
 
-const create = document.createElement
-const add = el => body.appendChild(el) || el
+const create = el => document.createElement(el)
+const add = (el, to) => (to || body).appendChild(el) || el
 
-const addAll = el => {
-  if (!Array.isArray(el)) {
-    el = [el]
-  }
-  el.forEach(e => body.appendChild(e))
+const addAll = (el, to) => {
+  el.forEach(e => (to || body).appendChild(e))
   return el
 }
 
@@ -22,7 +19,7 @@ const apply = (el, styles) => {
 }
 
 const textElement = tag => (text, styles) => {
-  const el = document.createElement('h1')
+  const el = create(tag)
   el.innerHTML = text
   el.style.fontFamily = 'Open Sans, sans-serif'
   el.style.fontWeight = 'normal'
@@ -30,6 +27,20 @@ const textElement = tag => (text, styles) => {
     apply(el, styles)
   }
   return el
+}
+
+const table = t => {
+  const tab = create('table')
+  const tbody = create('tbody')
+  add(tbody, tab)
+
+  t.forEach(row => {
+    const tr = create('tr')
+    add(tr, tbody)
+    addAll(row.map(cell => textElement('th')(cell)), tr)
+  })
+
+  return tab
 }
 
 const div = () => create('div')
@@ -55,4 +66,5 @@ module.exports = {
   h5,
   h6,
   p,
+  table,
 }
