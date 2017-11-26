@@ -1,4 +1,7 @@
-const { table, button } = require('./dom')
+const { table, button, textElement } = require('../dom')
+
+const playerSort = (a, b) =>
+  a.scoutRating === b.scoutRating ? b.overall - a.overall : b.scoutRating - a.scoutRating
 
 function PlayerTable({ players }, { onDraft }) {
   return table([
@@ -13,11 +16,11 @@ function PlayerTable({ players }, { onDraft }) {
       // 'potential',
       // 'overall',
       'rating',
-      'report',
+      // 'report',
     ],
-    ...players.sort((a, b) => b.scoutRating - a.scoutRating).map(p => [
-      button('Draft', { onClick: () => onDraft(p) }),
-      p.name,
+    ...players.sort(playerSort).map(p => [
+      p.team || button('Draft', { onClick: () => onDraft(p) }),
+      textElement('abbr')(p.name, { title: p.report }),
       p.age,
       p.position,
       // p.athlete,
@@ -26,7 +29,7 @@ function PlayerTable({ players }, { onDraft }) {
       // p.potential,
       // p.overall,
       p.rating,
-      p.report,
+      // p.report,
     ]),
   ])
 }

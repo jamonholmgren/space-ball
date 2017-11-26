@@ -1,4 +1,4 @@
-const { div, button } = require('./dom')
+const { div, button } = require('../dom')
 
 function Tools(state, props) {
   return div([

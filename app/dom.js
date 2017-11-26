@@ -13,7 +13,12 @@ const apply = (el, styles) => {
     return el
   }
   Object.keys(styles).reduce((el, key) => {
-    el.style[key] = styles[key]
+    if (key in el.style) {
+      el.style[key] = styles[key]
+    }
+    if (key in el) {
+      el[key] = styles[key]
+    }
     return el
   }, el)
 }
@@ -41,7 +46,9 @@ const table = t => {
     const tr = create('tr')
     const rows = row.map(
       cell =>
-        ['string', 'number'].includes(typeof cell) ? textElement('td')(cell) : element('td')([cell])
+        ['string', 'number', 'undefined'].includes(typeof cell)
+          ? textElement('td')(cell)
+          : element('td')([cell])
     )
     add(tr, tbody)
     addAll(rows, tr)

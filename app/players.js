@@ -100,7 +100,7 @@ const generatePlayer = () => {
     lastName: randomLast(),
     age: rand(18, 38),
     position: randPosition(),
-    team: null,
+    team: undefined,
   }
 
   // forward positions are generally better at offense, goalie better at defense
