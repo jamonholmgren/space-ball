@@ -1,4 +1,4 @@
-const { table, button, textElement, img } = require('../dom')
+const { table, button, create, img } = require('../dom')
 const { POSITIONS, playerFilter, playerSort } = require('../players')
 
 function TeamTable(state, { onDraft, team }) {
@@ -23,7 +23,7 @@ function TeamTable(state, { onDraft, team }) {
       // .filter(playerFilter(state.filter))
       .sort(playerSort)
       .map(p => [
-        textElement('abbr')(p.name, { title: p.report }),
+        create('abbr')(p.name, { title: p.report }),
         img(`https://api.adorable.io/avatars/20/${p.firstName}-${p.lastName}`, {
           width: '20',
           height: '20',

@@ -141,7 +141,7 @@ function render(state) {
       add(PlayerTable(state, { onDraft: draft }))
       break
     case 'season':
-      add(h1(`Season 1 - Week ${state.week} - ${state.team} vs ${opp}`))
+      add(h1(`Season 1 - Week ${state.week} - ${game[0]} vs ${game[1]}`))
       add(TeamTable(state, { team: game[0] }))
       add(TeamTable(state, { team: game[1] }))
       break

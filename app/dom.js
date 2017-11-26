@@ -1,101 +1,97 @@
+// root of the app
 const root = document.getElementById('root')
 
-const create = el => document.createElement(el) || el
-const add = (el, to) => (to || root).appendChild(el) || el
-
-const addAll = (el, to) => {
-  el.forEach(e => {
-    if (e instanceof HTMLElement) {
-      ;(to || root).appendChild(e)
-    } else if (!e) {
-      // ignore
-    } else {
-      console.log(`Not a dom node:`, typeof e, e)
-    }
-  })
+// adds an HTML element to another element (or root, by default)
+const add = (el, to = root) => {
+  if (el instanceof HTMLElement) {
+    to.appendChild(el)
+  } else if (!el) {
+    // ignore, it's a blank element
+  } else {
+    // output it as a text node
+    to.appendChild(document.createTextNode(`${el}`))
+  }
   return el
 }
 
-const apply = (el, styles) => {
-  if (!styles) {
-    return el
-  }
-  Object.keys(styles).reduce((el, key) => {
-    if (key in el.style) {
-      el.style[key] = styles[key]
-    }
+// adds a list of HTML elements to another element
+const addAll = (el, to) => (Array.isArray(el) ? el.map(e => add(e, to)) : add(el, to))
+
+// applies properties to an HTML element
+// if provided `style` property, applies those as well
+const apply = (el, props) => {
+  if (!props) return el
+
+  Object.keys(props).reduce((el, key) => {
     if (key in el) {
-      el[key] = styles[key]
+      // treat `style` differently
+      if (key === 'style') {
+        props[key].forEach(k => (el.style[k] = props[key][k]))
+      } else {
+        el[key] = props[key]
+      }
     }
     return el
   }, el)
 }
 
-const textElement = tag => (text, styles) => {
-  const el = create(tag)
-  el.innerHTML = text
-  styles && apply(el, styles)
+// creates an element of type with children and properties
+// e.g.
+//   element('h1')('Hello there', { style: { backgroundColor: 'red' } })
+const create = tag => (children, props) => {
+  const el = document.createElement(tag)
+  if (typeof children === 'string') {
+    el.innerHTML = children
+  } else {
+    children && addAll(children, el)
+  }
+  props && apply(el, props)
   return el
 }
 
-const element = tag => (children, styles) => {
-  const el = create(tag)
-  children && addAll(children, el)
-  styles && apply(el, styles)
-  return el
-}
+// creates a table from a provided 2 dimensional array of
+// text or html element nodes
+// first row is always the header -- make it null if you don't want a header
+// e.g.
+//   table([[ 'hey', 'there' ], [ 1, element ]])
+const table = t =>
+  create('table')([
+    t[0] && create('thead')(create('tr')(t[0].map(cell => create('th')(cell)))),
+    create('tbody')(t.slice(1).map(row => create('tr')(row.map(cell => create('td')(cell))))),
+  ])
 
-const table = t => {
-  const tab = create('table')
-  const tbody = create('tbody')
-  add(tbody, tab)
+// just some sugar for `create`
+const div = create('div')
+const h1 = create('h1')
+const h2 = create('h2')
+const h3 = create('h3')
+const h4 = create('h4')
+const h5 = create('h5')
+const h6 = create('h6')
+const p = create('p')
 
-  t.forEach(row => {
-    const tr = create('tr')
-    const rows = row.map(
-      cell =>
-        ['string', 'number', 'undefined'].includes(typeof cell)
-          ? textElement('td')(cell)
-          : element('td')([cell])
-    )
-    add(tr, tbody)
-    addAll(rows, tr)
-  })
-
-  return tab
-}
-
-const div = element('div')
-const h1 = textElement('h1')
-const h2 = textElement('h2')
-const h3 = textElement('h3')
-const h4 = textElement('h4')
-const h5 = textElement('h5')
-const h6 = textElement('h6')
-const p = textElement('p')
-
+// creates a button with an onClick
 const button = (text, props) => {
-  const b = create('button')
-  b.innerHTML = text
+  const b = create('button')(text, props)
   props.onClick && b.addEventListener('click', props.onClick)
   return b
 }
 
-const img = (src, styles) => {
-  const i = create('img')
+// creates an image with a src
+const img = (src, props) => {
+  const i = create('img')(null, props)
   i.src = src
-  styles && apply(i, styles)
   return i
 }
 
-const clearAll = () => (root.innerHTML = '')
+// clears everything from root (or any other node)
+const clearAll = (el = root) => (el.innerHTML = '')
 
 module.exports = {
   create,
   add,
   apply,
   button,
-  textElement,
   div,
   h1,
   h2,

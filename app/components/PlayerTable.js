@@ -1,5 +1,5 @@
 const { playerFilter } = require('../players')
-const { table, button, img, textElement } = require('../dom')
+const { table, button, img, create } = require('../dom')
 
 const playerSort = (a, b) =>
   a.scoutRating === b.scoutRating ? b.overall - a.overall : b.scoutRating - a.scoutRating
@@ -29,7 +29,7 @@ function PlayerTable({ team, drafting, players, filter }, { onDraft }) {
           width: '20',
           height: '20',
         }),
-        textElement('abbr')(p.name, { title: p.report }),
+        create('abbr')(p.name, { title: p.report }),
         p.age,
         p.position,
         // p.athlete,
