@@ -1,13 +1,5 @@
 const { table, button, textElement, img } = require('../dom')
-const { POSITIONS, playerFilter } = require('../players')
-
-const playerSort = (a, b) => {
-  let s = POSITIONS.indexOf(a.position) - POSITIONS.indexOf(b.position)
-  if (s !== 0) return s
-  s = b.scoutRating - a.scoutRating
-  if (s !== 0) return s
-  return a.name.localeCompare(b.name)
-}
+const { POSITIONS, playerFilter, playerSort } = require('../players')
 
 function TeamTable(state, { onDraft, team }) {
   team = team || state.drafting || state.team

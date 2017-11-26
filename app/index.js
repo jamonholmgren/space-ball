@@ -1,7 +1,7 @@
 const storage = require('electron-json-storage')
 const STATE_STORAGE = 'gameState'
 
-const TICK_DELAY = 1000
+const TICK_DELAY = 100
 
 const INITIAL_PLAYERS_COUNT = 80 // 10 for each team
 
@@ -9,9 +9,9 @@ const { add, clearAll, h1 } = require('./dom')
 const { generatePlayers } = require('./players')
 const { TEAMS } = require('./teams')
 const { autoDraftPlayer } = require('./drafting')
-const { schedule } = require('./scheduling')
+const { schedule, myGame } = require('./scheduling')
 const { heal } = require('./heal')
-const { Tools, TeamTable, PlayerTable } = require('./components')
+const { Tools, TeamTable, PlayerTable, Game } = require('./components')
 
 // initial state load
 storage.get(STATE_STORAGE, (err, oldState) => {
@@ -87,7 +87,13 @@ const clear = () => {
 function draft(player) {
   if (!player) {
     // done drafting
-    setState({ status: 'season', drafting: null, schedule: schedule(TEAMS), week: 1 })
+    setState({
+      status: 'season',
+      drafting: null,
+      filter: null,
+      schedule: schedule(TEAMS),
+      week: 1,
+    })
     return
   }
 
@@ -110,6 +116,10 @@ function back() {
   setState({ status: 'season' })
 }
 
+function play() {
+  setState({ status: 'game' })
+}
+
 function render(state) {
   clearAll()
   add(
@@ -120,8 +130,10 @@ function render(state) {
       onBack: back,
       onAutoDraft: () => draft(autoDraftPlayer(state)),
       onFilter: t => () => setState({ filter: t }),
+      onPlay: play,
     })
   )
+  const game = myGame(state)
   switch (state.status) {
     case 'drafting':
       add(h1(`Season 1 - Week ${state.week} - Drafting: ${state.drafting}`))
@@ -129,18 +141,17 @@ function render(state) {
       add(PlayerTable(state, { onDraft: draft }))
       break
     case 'season':
-      console.log(state)
-      const opponent = state.schedule[state.week - 1]
-        .find(s => s.includes(state.team)) // game with my team in it
-        .find(t => t !== state.team) // opposing team
-
-      add(h1(`Season 1 - Week ${state.week} - ${state.team} vs ${opponent}`))
-      add(TeamTable(state, { team: state.team }))
-      add(TeamTable(state, { team: opponent }))
+      add(h1(`Season 1 - Week ${state.week} - ${state.team} vs ${opp}`))
+      add(TeamTable(state, { team: game[0] }))
+      add(TeamTable(state, { team: game[1] }))
       break
     case 'trading':
       add(h1(`Trading`))
       add(TeamTable(state, {}))
+      break
+    case 'game':
+      add(h1(`Season 1 - Week ${state.week} - ${game[0]} vs ${game[1]}`))
+      add(Game(state, { teams: game }))
       break
     default:
   }

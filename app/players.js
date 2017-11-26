@@ -130,4 +130,12 @@ const generatePlayer = () => {
 }
 const generatePlayers = num => [...Array(num)].map(generatePlayer)
 
-module.exports = { generatePlayers, generatePlayer, playerFilter, POSITIONS }
+const playerSort = (a, b) => {
+  let s = POSITIONS.indexOf(a.position) - POSITIONS.indexOf(b.position)
+  if (s !== 0) return s
+  s = b.scoutRating - a.scoutRating
+  if (s !== 0) return s
+  return a.name.localeCompare(b.name)
+}
+
+module.exports = { generatePlayers, generatePlayer, playerFilter, playerSort, POSITIONS }

@@ -4,7 +4,15 @@ const create = el => document.createElement(el) || el
 const add = (el, to) => (to || root).appendChild(el) || el
 
 const addAll = (el, to) => {
-  el.forEach(e => e && (to || root).appendChild(e))
+  el.forEach(e => {
+    if (e instanceof HTMLElement) {
+      ;(to || root).appendChild(e)
+    } else if (!e) {
+      // ignore
+    } else {
+      console.log(`Not a dom node:`, typeof e, e)
+    }
+  })
   return el
 }
 
