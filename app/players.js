@@ -27,9 +27,9 @@ const playerRating = p => {
 const strings = {
   veryYoung: ['very young', 'one of the youngest in the league', 'quite young'],
   young: ['up and coming', 'still pretty young'],
-  prime: ['is in his prime', 'at a good age'],
-  declining: ['is starting to decline', 'probably past his prime', 'declining'],
-  retirement: ['is nearing retirement', 'well past his prime', 'getting older'],
+  prime: ['prime age', 'at a good age'],
+  declining: ['is starting to decline', 'probably past prime', 'declining'],
+  retirement: ['is nearing retirement', 'well past prime', 'getting older'],
   bad: [`probably not a big league player`, 'pretty unimpressive', 'unlikely to be drafted'],
   average: ['nothing really stands out', 'lacks a go-to skill set', `nothing too impressive`],
   awesome: [`one of the best in the league`, 'future hall-of-famer', 'likely all-star'],
@@ -37,13 +37,13 @@ const strings = {
   averageAthlete: ['average athletic ability', `isn't a breakout athlete`],
   badAthlete: ['questionable athleticism', `not an athlete`, `struggles to keep up`],
   offensive: ['can score the ball', 'dynamic offensive player', 'true scorer'],
-  averageOffensive: [`has some holes in his offensive game`, `shows flashes on offensive side`],
+  averageOffensive: [`has some holes in offensive game`, `shows flashes on offensive side`],
   badOffensive: [`can't really score`, `lacks any sort of offensive game`],
   defensive: ['defends very aggressively', 'good defender', 'will impact the defensive end'],
   averageDefensive: [`won't hurt you on defense`, 'average defender'],
   badDefensive: [`not much of a defender`, 'defends poorly', 'lacks defensive skill'],
   potential: ['displays a lot of potential', 'will likely get better', 'could improve a lot'],
-  averagePotential: ['jury is out on potential', `not sure if he'll improve`, 'might improve'],
+  averagePotential: ['jury is out on potential', `not sure if will improve`, 'might improve'],
   badPotential: ['unlikely to improve', `not much potential`, `don't expect to improve`],
 }
 
