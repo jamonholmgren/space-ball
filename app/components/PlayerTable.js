@@ -1,4 +1,4 @@
-const { table, button, textElement } = require('../dom')
+const { table, button, img, textElement } = require('../dom')
 
 const playerSort = (a, b) =>
   a.scoutRating === b.scoutRating ? b.overall - a.overall : b.scoutRating - a.scoutRating
@@ -7,6 +7,7 @@ function PlayerTable({ team, drafting, players }, { onDraft }) {
   return table([
     [
       'draft',
+      'pic',
       'name',
       'age',
       'position',
@@ -20,6 +21,10 @@ function PlayerTable({ team, drafting, players }, { onDraft }) {
     ],
     ...players.sort(playerSort).map(p => [
       p.team || (team === drafting && button('Draft', { onClick: () => onDraft(p) })) || '',
+      img(`https://api.adorable.io/avatars/20/${p.firstName}-${p.lastName}`, {
+        width: '20',
+        height: '20',
+      }),
       textElement('abbr')(p.name, { title: p.report }),
       p.age,
       p.position,

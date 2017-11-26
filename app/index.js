@@ -5,19 +5,11 @@ const TICK_DELAY = 1000
 
 const { add, clearAll, h1 } = require('./dom')
 const { generatePlayers } = require('./players')
+const { TEAMS } = require('./teams')
 const { autoDraftPlayer } = require('./drafting')
+const { schedule } = require('./scheduling')
+const { heal } = require('./heal')
 const { Tools, TeamTable, PlayerTable } = require('./components')
-
-const TEAMS = [
-  'mercurians',
-  'venusians',
-  'terrans',
-  'martians',
-  'jovians',
-  'saturnians',
-  'uranians',
-  'neptunians',
-]
 
 // initial state load
 storage.get(STATE_STORAGE, (err, oldState) => {
@@ -27,7 +19,8 @@ storage.get(STATE_STORAGE, (err, oldState) => {
 const INITIAL_STATE = {
   status: 'drafting',
   drafting: TEAMS[0],
-  scheduleOffset: 0,
+  schedule: [],
+  week: 0,
   players: [],
   team: 'martians',
   mercurians: { wins: 0, losses: 0, players: [] },
@@ -61,7 +54,7 @@ function setTick(st) {
 }
 
 function setState(newState) {
-  state = Object.assign({}, state, newState)
+  state = heal(Object.assign({}, state, newState))
 
   // persist state
   storage.set(STATE_STORAGE, state)
@@ -76,9 +69,11 @@ function setState(newState) {
   render(state)
 }
 
-const reset = () => {
-  clear()
-  setState({ players: generatePlayers(80) })
+const restart = () => {
+  if (window.confirm(`Are you sure? You'll lose all progress.`)) {
+    clear()
+    setState({ players: generatePlayers(80) })
+  }
 }
 const clear = () => {
   storage.clear(STATE_STORAGE)
@@ -90,7 +85,7 @@ const clear = () => {
 function draft(player) {
   if (!player) {
     // done drafting
-    setState({ status: 'season', drafting: null })
+    setState({ status: 'season', drafting: null, schedule: schedule(TEAMS), week: 1 })
     return
   }
 
@@ -115,16 +110,30 @@ function back() {
 
 function render(state) {
   clearAll()
-  add(Tools(state, { onReset: reset, onClear: clear, onTrade: trade, onBack: back }))
+  add(
+    Tools(state, {
+      onRestart: restart,
+      onClear: clear,
+      onTrade: trade,
+      onBack: back,
+      onAutoDraft: () => draft(autoDraftPlayer(state)),
+    })
+  )
   switch (state.status) {
     case 'drafting':
-      add(h1(`Drafting: ${state.drafting}`))
+      add(h1(`Season 1 - Week ${state.week} - Drafting: ${state.drafting}`))
       add(TeamTable(state, {}))
       add(PlayerTable(state, { onDraft: draft }))
       break
     case 'season':
-      add(h1(`Season 1`))
-      add(TeamTable(state, {}))
+      console.log(state)
+      const opponent = state.schedule[state.week - 1]
+        .find(s => s.includes(state.team)) // game with my team in it
+        .find(t => t !== state.team) // opposing team
+
+      add(h1(`Season 1 - Week ${state.week} - ${state.team} vs ${opponent}`))
+      add(TeamTable(state, { team: state.team }))
+      add(TeamTable(state, { team: opponent }))
       break
     case 'trading':
       add(h1(`Trading`))

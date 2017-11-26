@@ -1,21 +1,20 @@
-const { table, button, textElement } = require('../dom')
+const { table, button, textElement, img } = require('../dom')
+const { POSITIONS } = require('../players')
 
 const playerSort = (a, b) => {
-  if (a.position > b.position) {
-    return -1
-  }
-  if (a.position < b.position) {
-    return 1
-  }
+  const s = POSITIONS.indexOf(a.position) - POSITIONS.indexOf(b.position)
+  if (s !== 0) return s
   return a.fullName < b.fullName ? -1 : 1
 }
 
-function TeamTable(state, { onDraft }) {
-  const players = state[state.drafting || state.team].players
+function TeamTable(state, { onDraft, team }) {
+  team = team || state.drafting || state.team
+  const players = state[team].players
 
   return table([
     [
-      state.drafting || state.team,
+      team,
+      'img',
       'age',
       'position',
       // 'athlete',
@@ -28,6 +27,10 @@ function TeamTable(state, { onDraft }) {
     ],
     ...players.sort(playerSort).map(p => [
       textElement('abbr')(p.name, { title: p.report }),
+      img(`https://api.adorable.io/avatars/20/${p.firstName}-${p.lastName}`, {
+        width: '20',
+        height: '20',
+      }),
       p.age,
       p.position,
       // p.athlete,

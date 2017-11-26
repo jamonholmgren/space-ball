@@ -73,6 +73,13 @@ const button = (text, props) => {
   return b
 }
 
+const img = (src, styles) => {
+  const i = create('img')
+  i.src = src
+  styles && apply(i, styles)
+  return i
+}
+
 const clearAll = () => (root.innerHTML = '')
 
 module.exports = {
@@ -90,5 +97,6 @@ module.exports = {
   h6,
   p,
   table,
+  img,
   clearAll,
 }

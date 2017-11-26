@@ -726,6 +726,10 @@ rimraf@^2.2.8, rimraf@^2.5.1:
   dependencies:
     glob "^7.0.5"
 
+roundrobin@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/roundrobin/-/roundrobin-1.0.3.tgz#5be419bce3b0129ef379aaa406318cfc57281506"
+
 rwlock@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/rwlock/-/rwlock-5.0.0.tgz#888d6a77a3351cc1a209204ef2ee1722093836cf"
