@@ -5,11 +5,11 @@ const TICK_DELAY = 100
 
 const INITIAL_PLAYERS_COUNT = 80 // 10 for each team
 
-const { add, clearAll, h1 } = require('./dom')
+const { add, clearAll, h1, h3 } = require('./dom')
 const { generatePlayers } = require('./players')
 const { TEAMS } = require('./teams')
 const { autoDraftPlayer } = require('./drafting')
-const { schedule, myGame } = require('./scheduling')
+const { schedule, nextGame } = require('./scheduling')
 const { heal } = require('./heal')
 const { Tools, TeamTable, PlayerTable, Game } = require('./components')
 
@@ -25,14 +25,15 @@ const INITIAL_STATE = {
   week: 0,
   players: [],
   team: 'martians',
-  mercurians: { wins: 0, losses: 0, players: [] },
-  venusians: { wins: 0, losses: 0, players: [] },
-  terrans: { wins: 0, losses: 0, players: [] },
-  martians: { wins: 0, losses: 0, players: [] },
-  jovians: { wins: 0, losses: 0, players: [] },
-  saturnians: { wins: 0, losses: 0, players: [] },
-  uranians: { wins: 0, losses: 0, players: [] },
-  neptunians: { wins: 0, losses: 0, players: [] },
+  game: null,
+  mercurians: { name: 'mercurians', wins: 0, losses: 0, players: [] },
+  venusians: { name: 'venusians', wins: 0, losses: 0, players: [] },
+  terrans: { name: 'terrans', wins: 0, losses: 0, players: [] },
+  martians: { name: 'martians', wins: 0, losses: 0, players: [] },
+  jovians: { name: 'jovians', wins: 0, losses: 0, players: [] },
+  saturnians: { name: 'saturnians', wins: 0, losses: 0, players: [] },
+  uranians: { name: 'uranians', wins: 0, losses: 0, players: [] },
+  neptunians: { name: 'neptunians', wins: 0, losses: 0, players: [] },
 }
 
 // Game state. This is where the magic happens.
@@ -53,6 +54,13 @@ function setTick(st) {
       draft(pl)
     }, TICK_DELAY)
   }
+
+  if (st.status === 'season' && !st.game) {
+    return setTimeout(() => {
+      // start a new game (with fresh state)
+      setState({ game: nextGame(state) })
+    }, TICK_DELAY)
+  }
 }
 
 function setState(newState) {
@@ -67,6 +75,8 @@ function setState(newState) {
   }
 
   tick = setTick(state)
+
+  console.log(`Current State: `, state)
 
   render(state)
 }
@@ -133,25 +143,33 @@ function render(state) {
       onPlay: play,
     })
   )
-  const game = myGame(state)
+  add(h1(`Season 1 - Week ${state.week}`))
   switch (state.status) {
     case 'drafting':
-      add(h1(`Season 1 - Week ${state.week} - Drafting: ${state.drafting}`))
+      add(h3(`Drafting: ${state.drafting}`))
       add(TeamTable(state, {}))
       add(PlayerTable(state, { onDraft: draft }))
       break
     case 'season':
-      add(h1(`Season 1 - Week ${state.week} - ${game[0]} vs ${game[1]}`))
-      add(TeamTable(state, { team: game[0] }))
-      add(TeamTable(state, { team: game[1] }))
+      if (state.game) {
+        add(h3(`${state.game.teams[0].name} vs ${state.game.teams[1].name}`))
+        add(TeamTable(state, { team: state.game.teams[0] }))
+        add(TeamTable(state, { team: state.game.teams[1] }))
+      } else {
+        add(h3(`Scheduling next game...`))
+      }
       break
     case 'trading':
-      add(h1(`Trading`))
+      add(h3(`Trading`))
       add(TeamTable(state, {}))
       break
     case 'game':
-      add(h1(`Season 1 - Week ${state.week} - ${game[0]} vs ${game[1]}`))
-      add(Game(state, { teams: game }))
+      if (state.game) {
+        add(h3(`${state.game.teams[0].name} vs ${state.game.teams[1].name}`))
+        add(Game(state))
+      } else {
+        // uh oh
+      }
       break
     default:
   }

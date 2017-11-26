@@ -1,4 +1,4 @@
-const { playerFilter } = require('../players')
+const { playerFilter, avatar } = require('../players')
 const { table, button, img, create } = require('../dom')
 
 const playerSort = (a, b) =>
@@ -25,7 +25,7 @@ function PlayerTable({ team, drafting, players, filter }, { onDraft }) {
       .sort(playerSort)
       .map(p => [
         p.team || (team === drafting && button('Draft', { onClick: () => onDraft(p) })) || '',
-        img(`https://api.adorable.io/avatars/20/${p.firstName}-${p.lastName}`, {
+        img(avatar(p), {
           width: '20',
           height: '20',
         }),

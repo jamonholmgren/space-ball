@@ -22,7 +22,7 @@ const apply = (el, props) => {
     if (key in el) {
       // treat `style` differently
       if (key === 'style') {
-        props[key].forEach(k => (el.style[k] = props[key][k]))
+        Object.keys(props[key]).forEach(k => (el.style[k] = props[key][k]))
       } else {
         el[key] = props[key]
       }
@@ -65,6 +65,7 @@ const h4 = create('h4')
 const h5 = create('h5')
 const h6 = create('h6')
 const p = create('p')
+const span = create('span')
 
 // creates a button with an onClick
 const button = (text, props) => {
@@ -96,6 +97,7 @@ module.exports = {
   h5,
   h6,
   p,
+  span,
   table,
   img,
   clearAll,

@@ -3,11 +3,11 @@ const { POSITIONS, playerFilter, playerSort } = require('../players')
 
 function TeamTable(state, { onDraft, team }) {
   team = team || state.drafting || state.team
-  const players = state[team].players
+  const players = typeof team === 'string' ? state[team].players : team.players
 
   return table([
     [
-      team,
+      team.name,
       'img',
       'age',
       'position',

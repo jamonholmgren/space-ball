@@ -4,12 +4,16 @@ function schedule(teams) {
   return robin(teams.length, teams)
 }
 
-function myGame(state) {
-  return (state.schedule[state.week - 1] || []).find(s => s.includes(state.team)) // game with my team in it
+// finds the next game in the schedule for the given week
+// if it doesn't find one, returns null, which should advance to the next week
+function nextGame(state) {
+  const g = (state.schedule[state.week - 1] || []).find(g => Array.isArray(g))
+  if (!g) return g
+  return {
+    teams: [state[g[0]], state[g[1]]],
+    score: [0, 0],
+    time: 1000,
+  }
 }
 
-function myOpponent(state) {
-  return myGame(state).find(t => t !== state.team) // opposing team
-}
-
-module.exports = { schedule, myGame, myOpponent }
+module.exports = { schedule, nextGame }
