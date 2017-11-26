@@ -12,10 +12,10 @@ const autoDraftPlayer = state => {
 
   // figure out what positions we need to draft for
   let needs = POSITIONS.filter(
-    pos => state[state.team].players.filter(p => p.position === pos).length < 2
+    pos => state[state.drafting].players.filter(p => p.position === pos).length < 1
   )
 
-  // if no current needs, then draft whatever
+  // if no current needs, then draft whoever is best
   if (needs.length === 0) needs = POSITIONS
 
   // randomly try to find a suitable player in the top 5

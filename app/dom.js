@@ -4,7 +4,7 @@ const create = el => document.createElement(el) || el
 const add = (el, to) => (to || root).appendChild(el) || el
 
 const addAll = (el, to) => {
-  el.forEach(e => (to || root).appendChild(e))
+  el.forEach(e => e && (to || root).appendChild(e))
   return el
 }
 

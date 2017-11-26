@@ -109,8 +109,8 @@ const generatePlayer = () => {
   // Goalie minimum 70 defensive rating, attack minimum 50
   // Attack minimum 70 offensive rating, goalie minimum 50
   const defensive = POSITIONS.indexOf(p.position) - 2
-  p.offense = rand(60 + 5 * defensive, 99)
-  p.defense = rand(60 - 5 * defensive, 99)
+  p.offense = rand(60 - 5 * defensive, 99)
+  p.defense = rand(60 + 5 * defensive, 99)
 
   // top-end potential and athletic ability drops by 5 for every year over X years old
   p.potential = rand(50, 99 - 5 * Math.max(0, p.age - 27))

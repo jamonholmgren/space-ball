@@ -3,7 +3,8 @@ const { div, button } = require('../dom')
 function Tools(state, props) {
   return div([
     button('reset', { onClick: props.onReset }),
-    button('clear', { onClick: props.onClear }),
+    state.status === 'season' && button('trade', { onClick: props.onTrade }),
+    state.status === 'trading' && button('back', { onClick: props.onBack }),
   ])
 }
 

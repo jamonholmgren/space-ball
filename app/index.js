@@ -105,14 +105,30 @@ function draft(player) {
   })
 }
 
+function trade() {
+  setState({ status: 'trading' })
+}
+
+function back() {
+  setState({ status: 'season' })
+}
+
 function render(state) {
   clearAll()
-  add(Tools(state, { onReset: reset, onClear: clear }))
+  add(Tools(state, { onReset: reset, onClear: clear, onTrade: trade, onBack: back }))
   switch (state.status) {
     case 'drafting':
       add(h1(`Drafting: ${state.drafting}`))
       add(TeamTable(state, {}))
       add(PlayerTable(state, { onDraft: draft }))
+      break
+    case 'season':
+      add(h1(`Season 1`))
+      add(TeamTable(state, {}))
+      break
+    case 'trading':
+      add(h1(`Trading`))
+      add(TeamTable(state, {}))
       break
     default:
   }

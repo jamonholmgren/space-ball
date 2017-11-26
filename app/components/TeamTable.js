@@ -11,11 +11,11 @@ const playerSort = (a, b) => {
 }
 
 function TeamTable(state, { onDraft }) {
-  const players = state[state.team].players
+  const players = state[state.drafting || state.team].players
 
   return table([
     [
-      'name',
+      state.drafting || state.team,
       'age',
       'position',
       // 'athlete',
