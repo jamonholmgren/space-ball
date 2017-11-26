@@ -3,15 +3,11 @@ const root = document.getElementById('root')
 
 // adds an HTML element to another element (or root, by default)
 const add = (el, to = root) => {
-  if (el instanceof HTMLElement) {
-    to.appendChild(el)
-  } else if (!el) {
-    // ignore, it's a blank element
-  } else {
-    // output it as a text node
-    to.appendChild(document.createTextNode(`${el}`))
-  }
-  return el
+  if (!el) return // blank, no-op
+
+  return el instanceof HTMLElement
+    ? to.appendChild(el) // normal html element
+    : to.appendChild(document.createTextNode(`${el}`)) // text node
 }
 
 // adds a list of HTML elements to another element
