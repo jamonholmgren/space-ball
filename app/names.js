@@ -3224,8 +3224,6 @@ const lastNames = [
 const firstNamesLength = firstNames.length
 const lastNamesLength = lastNames.length
 
-console.log(firstNamesLength)
-
 const randomFirst = () => firstNames[Math.floor(Math.random() * firstNamesLength)]
 const randomLast = () => lastNames[Math.floor(Math.random() * lastNamesLength)]
 
