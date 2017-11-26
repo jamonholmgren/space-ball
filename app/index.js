@@ -3,6 +3,8 @@ const STATE_STORAGE = 'gameState'
 
 const TICK_DELAY = 1000
 
+const INITIAL_PLAYERS_COUNT = 80 // 10 for each team
+
 const { add, clearAll, h1 } = require('./dom')
 const { generatePlayers } = require('./players')
 const { TEAMS } = require('./teams')
@@ -72,7 +74,7 @@ function setState(newState) {
 const restart = () => {
   if (window.confirm(`Are you sure? You'll lose all progress.`)) {
     clear()
-    setState({ players: generatePlayers(80) })
+    setState({ players: generatePlayers(INITIAL_PLAYERS_COUNT) })
   }
 }
 const clear = () => {
@@ -117,6 +119,7 @@ function render(state) {
       onTrade: trade,
       onBack: back,
       onAutoDraft: () => draft(autoDraftPlayer(state)),
+      onFilter: t => () => setState({ filter: t }),
     })
   )
   switch (state.status) {

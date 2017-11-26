@@ -4,6 +4,12 @@ const { rand } = require('./utils')
 const POSITIONS = ['Attack', 'Forward', 'Center', 'Defense', 'Goalie']
 const randPosition = () => POSITIONS[rand(0, 4)]
 
+const playerFilter = filter => p => {
+  if (POSITIONS.includes(filter)) return p.position === filter
+  if (filter === 'undrafted') return !p.team
+  return true
+}
+
 const overallRating = p => Math.floor((p.athlete + p.offense + p.defense + p.potential) / 4)
 
 const playerRating = p => {
@@ -124,4 +130,4 @@ const generatePlayer = () => {
 }
 const generatePlayers = num => [...Array(num)].map(generatePlayer)
 
-module.exports = { generatePlayers, generatePlayer, POSITIONS }
+module.exports = { generatePlayers, generatePlayer, playerFilter, POSITIONS }
