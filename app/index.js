@@ -1,5 +1,11 @@
-const { add, h1, table } = require('./dom')
+const storage = require('electron-json-storage')
+const STATE_STORAGE = 'gameState'
+
+const { add, button, clearAll } = require('./dom')
 const { generatePlayers } = require('./players')
+const { Tools } = require('./Tools')
+const { TeamTable } = require('./TeamTable')
+const { PlayerTable } = require('./PlayerTable')
 
 // const myh1 = add(
 //   h1('Space Ball', {
@@ -11,33 +17,34 @@ const { generatePlayers } = require('./players')
 // myh1.style.left = '40px'
 // myh1.style.top = '20px'
 
-const players = generatePlayers(150)
+// initial state load
+storage.get(STATE_STORAGE, (err, oldState) => {
+  setState(oldState)
+})
 
-const playerRows = [
-  [
-    'name',
-    'age',
-    'position',
-    'athlete',
-    'offense',
-    'defense',
-    'potential',
-    // 'overall',
-    'rating',
-    'report',
-  ],
-  ...players.sort((a, b) => b.scoutRating - a.scoutRating).map(p => [
-    p.name,
-    p.age,
-    p.position,
-    p.athlete,
-    p.offense,
-    p.defense,
-    p.potential,
-    // p.overall,
-    p.rating,
-    p.report,
-  ]),
-]
+const INITIAL_STATE = { players: [], team: [] }
 
-add(table(playerRows))
+let state = Object.assign({}, INITIAL_STATE)
+function setState(newState) {
+  state = Object.assign({}, state, newState)
+
+  // persist state
+  storage.set(STATE_STORAGE, state)
+
+  render(state)
+}
+
+const reset = () => setState({ players: generatePlayers(80) })
+const clear = () => storage.clear(STATE_STORAGE) || setState(Object.assign({}, INITIAL_STATE))
+
+const draft = player => {
+  player.team = 'Player'
+  setState({ team: [...state.team, player] })
+}
+
+function render(state) {
+  clearAll()
+  add(Tools(state, { onReset: reset, onClear: clear }))
+  add(TeamTable(state, {}))
+  add(PlayerTable(state, { onDraft: draft }))
+}

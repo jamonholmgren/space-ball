@@ -1,7 +1,7 @@
 const { randomFirst, randomLast } = require('./names')
 const { rand } = require('./utils')
 
-const POSITIONS = ['Attack', 'Forward', 'Center', 'Post', 'Defense']
+const POSITIONS = ['Attack', 'Forward', 'Center', 'Defense', 'Goalie']
 const randPosition = () => POSITIONS[rand(0, 4)]
 
 const overallRating = p => Math.floor((p.athlete + p.offense + p.defense + p.potential) / 4)
@@ -43,7 +43,7 @@ const strings = {
   averageDefensive: [`won't hurt you on defense`, 'average defender'],
   badDefensive: [`not much of a defender`, 'defends poorly', 'lacks defensive skill'],
   potential: ['displays a lot of potential', 'will likely get better', 'could improve a lot'],
-  averagePotential: ['jury is out on potential', `not sure if he'll improve`, 'could improve'],
+  averagePotential: ['jury is out on potential', `not sure if he'll improve`, 'might improve'],
   badPotential: ['unlikely to improve', `not much potential`, `don't expect to improve`],
 }
 
@@ -77,10 +77,10 @@ const playerReport = p => {
   goodAt.includes('defense') && report.push(reportFor('defensive'))
   goodAt.includes('potential') && report.push(reportFor('potential'))
 
-  // averageAt.includes('athlete') && report.push(reportFor('averageAthlete'))
-  // averageAt.includes('offense') && report.push(reportFor('averageOffensive'))
-  // averageAt.includes('defense') && report.push(reportFor('averageDefensive'))
-  // averageAt.includes('potential') && report.push(reportFor('averagePotential'))
+  averageAt.includes('athlete') && report.push(reportFor('averageAthlete'))
+  averageAt.includes('offense') && report.push(reportFor('averageOffensive'))
+  averageAt.includes('defense') && report.push(reportFor('averageDefensive'))
+  averageAt.includes('potential') && report.push(reportFor('averagePotential'))
 
   badAt.includes('athlete') && report.push(reportFor('badAthlete'))
   badAt.includes('offense') && report.push(reportFor('badOffensive'))
@@ -88,7 +88,7 @@ const playerReport = p => {
   badAt.includes('potential') && report.push(reportFor('badPotential'))
 
   // now remove an item, randomly
-  // report.splice(Math.floor(Math.random() * report.length), 1)
+  report.splice(Math.floor(Math.random() * report.length), 1)
 
   return report.join('...')
 }
@@ -100,20 +100,21 @@ const generatePlayer = () => {
     lastName: randomLast(),
     age: rand(18, 38),
     position: randPosition(),
+    team: null,
   }
 
-  // forward positions are generally better at offense, defense better at defense
-  // defense = 2, center = 0, attack = -2
+  // forward positions are generally better at offense, goalie better at defense
+  // goalie = 2, center = 0, attack = -2
   // This gives a boost of 20 to one and a penalty of 20 to the other
-  // Defense minimum 70 defensive rating
-  // Attack minimum 70 offensive rating
+  // Goalie minimum 70 defensive rating, attack minimum 50
+  // Attack minimum 70 offensive rating, goalie minimum 50
   const defensive = POSITIONS.indexOf(p.position) - 2
   p.offense = rand(60 + 5 * defensive, 99)
   p.defense = rand(60 - 5 * defensive, 99)
 
-  // top-end potential and athletic ability drops by 5 for every year over 27 years old
+  // top-end potential and athletic ability drops by 5 for every year over X years old
   p.potential = rand(50, 99 - 5 * Math.max(0, p.age - 27))
-  p.athlete = rand(50, 99 - 5 * Math.max(0, p.age - 27))
+  p.athlete = rand(50, 99 - 5 * Math.max(0, p.age - 31))
   p.overall = overallRating(p)
   p.name = `${p.firstName} ${p.lastName}`
   p.scoutRating = Math.min(rand(p.overall - 15, p.overall + 15), 99)

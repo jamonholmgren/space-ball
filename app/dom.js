@@ -1,10 +1,10 @@
-const body = document.body
+const root = document.getElementById('root')
 
-const create = el => document.createElement(el)
-const add = (el, to) => (to || body).appendChild(el) || el
+const create = el => document.createElement(el) || el
+const add = (el, to) => (to || root).appendChild(el) || el
 
 const addAll = (el, to) => {
-  el.forEach(e => (to || body).appendChild(e))
+  el.forEach(e => (to || root).appendChild(e))
   return el
 }
 
@@ -21,11 +21,14 @@ const apply = (el, styles) => {
 const textElement = tag => (text, styles) => {
   const el = create(tag)
   el.innerHTML = text
-  el.style.fontFamily = 'Open Sans, sans-serif'
-  el.style.fontWeight = 'normal'
-  if (styles) {
-    apply(el, styles)
-  }
+  styles && apply(el, styles)
+  return el
+}
+
+const element = tag => (children, styles) => {
+  const el = create(tag)
+  children && addAll(children, el)
+  styles && apply(el, styles)
   return el
 }
 
@@ -36,14 +39,18 @@ const table = t => {
 
   t.forEach(row => {
     const tr = create('tr')
+    const rows = row.map(
+      cell =>
+        ['string', 'number'].includes(typeof cell) ? textElement('td')(cell) : element('td')([cell])
+    )
     add(tr, tbody)
-    addAll(row.map(cell => textElement('th')(cell)), tr)
+    addAll(rows, tr)
   })
 
   return tab
 }
 
-const div = () => create('div')
+const div = element('div')
 const h1 = textElement('h1')
 const h2 = textElement('h2')
 const h3 = textElement('h3')
@@ -52,11 +59,20 @@ const h5 = textElement('h5')
 const h6 = textElement('h6')
 const p = textElement('p')
 
+const button = (text, props) => {
+  const b = create('button')
+  b.innerHTML = text
+  props.onClick && b.addEventListener('click', props.onClick)
+  return b
+}
+
+const clearAll = () => (root.innerHTML = '')
+
 module.exports = {
-  body,
   create,
   add,
   apply,
+  button,
   textElement,
   div,
   h1,
@@ -67,4 +83,5 @@ module.exports = {
   h6,
   p,
   table,
+  clearAll,
 }
