@@ -42,6 +42,54 @@ yarn
 yarn start
 ```
 
+## Dev Notes
+
+* Need to figure out a basic vdom so I can animate using CSS transitions, or maybe give up on my little React-like library (dom.js) and start using Preact
+ - Or maybe don't use setState for games -- allow direct manipulation of the elements?
+ - This might work ^^
+* Need to put team colors on each player so it's obvious what team they're with
+* Clean up the presentation on the arena
+* Add a ball
+* Add a scoreboard / time clock
+* Create faceoff state
+* Create passing ball between players
+* Create player AI so they know whether to pass or shoot
+* Create shot on goal
+* Create goals
+* Create goal scored animation
+* Create deflections
+* Create interceptions
+* Create saves (goalie only)
+* Create time clock running down
+* Create game over animation
+* Refine auto substitutions
+* Create back button (only when game is over)
+* Update team records
+* Show standings
+* Play next game
+* Advance to next week
+* Finish schedule, show final standings
+* Keep stats for each player
+ - Goals scored
+ - Assists
+ - Saves (goalies)
+ - Deflections
+ - Interceptions
+ - Minutes played
+* Add player-control
+ - Substitute manually
+ - Choose to pass or shoot
+ - Defensive controls? (TBD?)
+* Playoff bracket?
+ - Track playoff stats separately
+* Track lifetime regular season & playoff records 
+* Main menu
+ - Choose a save slot
+ - Choose a team
+ - Exit to main menu anytime
+* Publish
+ - Make a page on jamonholmgren.com/spaceball ?
+
 ## License
 
 [MIT](LICENSE.md)
