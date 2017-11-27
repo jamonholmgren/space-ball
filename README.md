@@ -6,6 +6,8 @@ By [Jamon Holmgren](https://jamonholmgren.com).
 
 <img width="945" alt="screen shot 2017-11-26 at 12 38 12 am" src="https://user-images.githubusercontent.com/1479215/33238415-295f36e8-d242-11e7-84c1-24f50cbee761.png">
 
+<img width="1089" alt="screen shot 2017-11-26 at 11 01 47 pm" src="https://user-images.githubusercontent.com/1479215/33254503-d077fa1c-d2fd-11e7-8c70-cf665a10bf22.png">
+
 ## Description
 
 You're a manager for a popular soccer-like zero-gravity game, Space Ball. Ten players (five on each team) compete in the middle of an arena in zero gravity. They pass the ball back and forth and throw it at the goal. The defending team attempts to deflect or steal the ball, and play reverses.

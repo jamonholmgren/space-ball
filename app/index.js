@@ -2,20 +2,23 @@ const storage = require('electron-json-storage')
 const STATE_STORAGE = 'gameState'
 
 const TICK_DELAY = 100
+const SUBSTITUTION_DELAY = 5000
 
 const INITIAL_PLAYERS_COUNT = 80 // 10 for each team
 
 const { add, clearAll, h1, h3 } = require('./dom')
-const { generatePlayers } = require('./players')
+const { generatePlayers, POSITIONS } = require('./players')
 const { TEAMS } = require('./teams')
 const { autoDraftPlayer } = require('./drafting')
 const { schedule, nextGame } = require('./scheduling')
 const { heal } = require('./heal')
+const { autoSubstitution } = require('./game')
 const { Tools, TeamTable, PlayerTable, Game } = require('./components')
 
 // initial state load
 storage.get(STATE_STORAGE, (err, oldState) => {
-  setState(oldState)
+  // "heals" old data before setting state
+  setState(heal(oldState))
 })
 
 const INITIAL_STATE = {
@@ -24,7 +27,7 @@ const INITIAL_STATE = {
   schedule: [],
   week: 0,
   players: [],
-  team: 'martians',
+  team: 'a',
   game: null,
   mercurians: { name: 'mercurians', wins: 0, losses: 0, players: [] },
   venusians: { name: 'venusians', wins: 0, losses: 0, players: [] },
@@ -61,10 +64,21 @@ function setTick(st) {
       setState({ game: nextGame(state) })
     }, TICK_DELAY)
   }
+
+  if (st.status === 'game' && st.game) {
+    return setTimeout(() => {
+      autoSub(state)
+    }, SUBSTITUTION_DELAY)
+  }
+}
+
+function autoSub(state) {
+  const lineups = autoSubstitution(state)
+  setState({ game: Object.assign({}, state.game, { lineups: lineups }) })
 }
 
 function setState(newState) {
-  state = heal(Object.assign({}, state, newState))
+  state = Object.assign({}, state, newState)
 
   // persist state
   storage.set(STATE_STORAGE, state)
@@ -167,8 +181,6 @@ function render(state) {
       if (state.game) {
         add(h3(`${state.game.teams[0].name} vs ${state.game.teams[1].name}`))
         add(Game(state))
-      } else {
-        // uh oh
       }
       break
     default:

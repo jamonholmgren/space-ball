@@ -11,6 +11,22 @@ function nextGame(state) {
   if (!g) return g
   return {
     teams: [state[g[0]], state[g[1]]],
+    lineups: [
+      {
+        goalie: null,
+        defense: null,
+        center: null,
+        forward: null,
+        attack: null,
+      },
+      {
+        goalie: null,
+        defense: null,
+        center: null,
+        forward: null,
+        attack: null,
+      },
+    ],
     score: [0, 0],
     time: 1000,
   }

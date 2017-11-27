@@ -1,7 +1,7 @@
 const { randomFirst, randomLast } = require('./names')
 const { rand } = require('./utils')
 
-const POSITIONS = ['Attack', 'Forward', 'Center', 'Defense', 'Goalie']
+const POSITIONS = ['attack', 'forward', 'center', 'defense', 'goalie']
 const randPosition = () => POSITIONS[rand(0, 4)]
 
 const playerFilter = filter => p => {
@@ -107,6 +107,8 @@ const generatePlayer = () => {
     age: rand(18, 38),
     position: randPosition(),
     team: undefined,
+    energy: 100,
+    status: 'ready', // 'ready', 'resting', 'injured'
   }
 
   // forward positions are generally better at offense, goalie better at defense
