@@ -1,5 +1,13 @@
+// cache of dom objects so we don't recreate from scratch every time
+// this might be a bad idea, but i'm going to go with it as long as
+// i can. this will also allow for animation and whatnot
+const cache = {}
+
 // root of the app
 const root = document.getElementById('root')
+
+// clears everything from root (or any other node)
+const clearAll = (el = root) => (el.innerHTML = '')
 
 // adds an HTML element to another element (or root, by default)
 const add = (el, to = root) => {
@@ -22,7 +30,21 @@ const apply = (el, props) => {
     if (key in el) {
       // treat `style` differently
       if (key === 'style') {
-        Object.keys(props[key]).forEach(k => (el.style[k] = props[key][k]))
+        Object.keys(props[key]).forEach(k => {
+          // for animation, we set this attribute slightly afterward
+          // don't ask, this is hacky and horrible
+          const set = () => (el.style[k] = props[key][k])
+          
+          // okay, you asked. so the reason is because we add the element
+          // back into the dom, and then when we (slightly later) update
+          // the left/right/top/bottom/etc, CSS transition kicks in.
+          // if we change the attribute before we add it back into the dom,
+          // the CSS transition won't fire.
+          // yuck, and there's almost certainly a better way.
+          // this is what you get for having a back end dev write front end code
+          // but this DOES work!
+          ;(props.animate || []).includes(k) ? setTimeout(set, 1) : set()
+        })
       } else {
         el[key] = props[key]
       }
@@ -34,8 +56,16 @@ const apply = (el, props) => {
 // creates an element of type with children and properties
 // e.g.
 //   element('h1')('Hello there', { style: { backgroundColor: 'red' } })
-const create = tag => (children, props) => {
-  const el = document.createElement(tag)
+const create = tag => (children, props={}) => {
+  // load from cache if provided in props
+  let el = props.cache ? cache[props.cache] : null
+  el = el || document.createElement(tag)
+  
+  if (props.cache) {
+    clearAll(el)
+    cache[props.cache] = el
+  }
+  
   if (typeof children === 'string') {
     el.innerHTML = children
   } else {
@@ -50,11 +80,11 @@ const create = tag => (children, props) => {
 // first row is always the header -- make it null if you don't want a header
 // e.g.
 //   table([[ 'hey', 'there' ], [ 1, element ]])
-const table = t =>
+const table = (t, props) =>
   create('table')([
     t[0] && create('thead')(create('tr')(t[0].map(cell => create('th')(cell)))),
     create('tbody')(t.slice(1).map(row => create('tr')(row.map(cell => create('td')(cell))))),
-  ])
+  ], props)
 
 // just some sugar for `create`
 const div = create('div')
@@ -80,9 +110,6 @@ const img = (src, props) => {
   i.src = src
   return i
 }
-
-// clears everything from root (or any other node)
-const clearAll = (el = root) => (el.innerHTML = '')
 
 module.exports = {
   create,

@@ -26,13 +26,13 @@ const ARENA_STYLE = {
   position: 'relative',
 }
 
-const coordinates = (position, leftright) => {
+const coordinates = (position, leftright, topbottom) => {
   return {
-    goalie: { [leftright]: `5%`, top: `50%` },
-    defense: { [leftright]: `25%`, top: `20%` },
-    center: { [leftright]: `45%`, top: `50%` },
-    forward: { [leftright]: `65%`, top: `80%` },
-    attack: { [leftright]: `80%`, top: `30%` },
+    goalie: { [leftright]: `5%`, [topbottom]: `50%` },
+    defense: { [leftright]: `25%`, [topbottom]: `20%` },
+    center: { [leftright]: `45%`, [topbottom]: `50%` },
+    forward: { [leftright]: `65%`, [topbottom]: `80%` },
+    attack: { [leftright]: `80%`, [topbottom]: `30%` },
   }[position]
 }
 
@@ -40,20 +40,22 @@ function TeamBox(state, { team, lineup, side }) {
   return div()
 }
 
-function Arena(state, props) {
+window.coords = []
+
+function Players(state, props) {
   const playerDivs = [0, 1].map(side => {
     const team = state.game.teams[side]
     const lineup = state.game.lineups[side]
-    const players = team.players.sort(playerSort)
+    const players = state[team].players.sort(playerSort)
     const topbottom = side === 0 ? 'top' : 'bottom'
     const leftright = side === 0 ? 'left' : 'right'
 
     return players.map((p, i) => {
       const playing = keyForValue(lineup, p)
       const coords = playing
-        ? coordinates(playing, leftright)
-        : { left: `${i * 5 + 25}%`, [topbottom]: '-12%' }
-
+        ? coordinates(playing, leftright, topbottom)
+        : { [leftright]: `${i * 5 + 25}%`, [topbottom]: '-12%' }
+        
       return div(
         [
           img(avatar(p), { title: p.name }), // avatar
@@ -73,21 +75,27 @@ function Arena(state, props) {
               height: `8px`,
             }
           ),
-          div(`${p.position[0]}&nbsp;${p.lastName}`), // title
+          div(`${(p.position[0] || '').toUpperCase()}&nbsp;${p.lastName}`), // title
         ],
         {
           style: Object.assign(coords, PLAYER_STYLE),
-        },
-        ARENA_STYLE
+          cache: `${side} - ${p.name}`,
+          animate: [ 'left', 'right', 'top', 'bottom' ],
+        }
       )
     })
   })
 
-  return div([].concat(playerDivs[0]).concat(playerDivs[1]), { style: ARENA_STYLE })
+  return playerDivs
+}
+
+function Arena(state, props) {
+  const players = Players(state, props)
+  return div([].concat(players[0]).concat(players[1]), { style: ARENA_STYLE })
 }
 
 function Game(state, props) {
-  return Arena(state)
+  return Arena(state, props)
 }
 
 module.exports = { Game }

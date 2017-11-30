@@ -10,7 +10,7 @@ function nextGame(state) {
   const g = (state.schedule[state.week - 1] || []).find(g => Array.isArray(g))
   if (!g) return g
   return {
-    teams: [state[g[0]], state[g[1]]],
+    teams: [g[0], g[1]],
     lineups: [
       {
         goalie: null,

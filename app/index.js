@@ -8,16 +8,15 @@ const INITIAL_PLAYERS_COUNT = 80 // 10 for each team
 
 const { add, clearAll, h1, h3 } = require('./dom')
 const { generatePlayers, POSITIONS } = require('./players')
+const { heal } = require('./heal')
 const { TEAMS } = require('./teams')
 const { autoDraftPlayer } = require('./drafting')
 const { schedule, nextGame } = require('./scheduling')
-const { heal } = require('./heal')
 const { autoSubstitution } = require('./game')
 const { Tools, TeamTable, PlayerTable, Game } = require('./components')
 
 // initial state load
 storage.get(STATE_STORAGE, (err, oldState) => {
-  // "heals" old data before setting state
   setState(heal(oldState))
 })
 
@@ -73,8 +72,12 @@ function setTick(st) {
 }
 
 function autoSub(state) {
-  const lineups = autoSubstitution(state)
-  setState({ game: Object.assign({}, state.game, { lineups: lineups }) })
+  if (Object.values(state.game.lineups[0])[0]) {
+    
+  } else {
+    const lineups = autoSubstitution(state)
+    setState({ game: Object.assign({}, state.game, { lineups: lineups }) })
+  }
 }
 
 function setState(newState) {
@@ -166,7 +169,7 @@ function render(state) {
       break
     case 'season':
       if (state.game) {
-        add(h3(`${state.game.teams[0].name} vs ${state.game.teams[1].name}`))
+        add(h3(`${state.game.teams[0]} vs ${state.game.teams[1]}`))
         add(TeamTable(state, { team: state.game.teams[0] }))
         add(TeamTable(state, { team: state.game.teams[1] }))
       } else {
@@ -179,7 +182,7 @@ function render(state) {
       break
     case 'game':
       if (state.game) {
-        add(h3(`${state.game.teams[0].name} vs ${state.game.teams[1].name}`))
+        add(h3(`${state.game.teams[0]} vs ${state.game.teams[1]}`))
         add(Game(state))
       }
       break

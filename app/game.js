@@ -2,7 +2,7 @@ const { POSITIONS } = require('./players')
 
 // returns an optimized lineup for each team in the current game
 const autoSubstitution = state => {
-  return state.game.teams.map(({ name }) => {
+  return state.game.teams.map((name) => {
     const players = state[name].players
     // finding the right lineup is complex
     // first, we rank all the players for each position

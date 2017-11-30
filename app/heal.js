@@ -16,10 +16,10 @@ function heal(st) {
   // update all energy to 100
   TEAMS.forEach(t => st[t].players.forEach(p => (p.energy = 100)))
 
-  // reconnect team after deserialization
-  if (st.game) {
-    st.game.teams[0] = st[st.game.teams[0].name]
-    st.game.teams[1] = st[st.game.teams[1].name]
+  // have to restart any games
+  if (st.status === 'game') {
+    st.game = null
+    st.status = 'season'
   }
 
   return st
