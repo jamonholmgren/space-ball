@@ -16,13 +16,16 @@ const PLAYER_STYLE = {
   textAlign: 'center',
   position: 'absolute',
   margin: '-20px -20px -20px -20px',
+  padding: '2px',
   transition: 'all 0.5s',
+  borderRadius: '8px',
+  overflow: 'hidden',
 }
 
 const ARENA_STYLE = {
   width: '100%',
   height: '400px',
-  backgroundColor: '#7b9bad',
+  backgroundColor: '#2C313C',
   position: 'relative',
 }
 
@@ -55,15 +58,20 @@ function Players(state, props) {
       const coords = playing
         ? coordinates(playing, leftright, topbottom)
         : { [leftright]: `${i * 5 + 25}%`, [topbottom]: '-12%' }
+      
+      const teamColor = {
+        backgroundColor: side === 0 ? '#6DDAFE' : '#C72B43'
+      }
         
       return div(
         [
-          img(avatar(p), { title: p.name }), // avatar
+          img(avatar(p), { title: p.name, style: { borderRadius: '8px 8px 0 0', overflow: 'hidden', } }), // avatar
+          div(`${(p.position[0] || '').toUpperCase()}&nbsp;${p.lastName}`), // title
           div(
             div(`${Math.floor(p.energy)}`, {
               style: {
                 width: `${p.energy / 2.5}px`,
-                height: '8px',
+                height: '10px',
                 backgroundColor: '#4c905f',
                 color: 'white',
                 fontSize: '8px',
@@ -75,10 +83,9 @@ function Players(state, props) {
               height: `8px`,
             }
           ),
-          div(`${(p.position[0] || '').toUpperCase()}&nbsp;${p.lastName}`), // title
         ],
         {
-          style: Object.assign(coords, PLAYER_STYLE),
+          style: Object.assign({}, PLAYER_STYLE, coords, teamColor),
           cache: `${side} - ${p.name}`,
           animate: [ 'left', 'right', 'top', 'bottom' ],
         }

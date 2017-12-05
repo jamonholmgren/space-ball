@@ -6,7 +6,7 @@ By [Jamon Holmgren](https://jamonholmgren.com).
 
 <img width="945" alt="screen shot 2017-11-26 at 12 38 12 am" src="https://user-images.githubusercontent.com/1479215/33238415-295f36e8-d242-11e7-84c1-24f50cbee761.png">
 
-<img width="1089" alt="screen shot 2017-11-26 at 11 01 47 pm" src="https://user-images.githubusercontent.com/1479215/33254503-d077fa1c-d2fd-11e7-8c70-cf665a10bf22.png">
+![screen shot 2017-12-04 at 10 11 53 pm](https://user-images.githubusercontent.com/1479215/33592504-2f4c1d50-d940-11e7-9292-06611b715db2.png)
 
 ## Description
 
@@ -45,7 +45,7 @@ yarn start
 ## Dev Notes
 
 * [x] ~Need to figure out animating using CSS transitions~
-* [ ] Need to put team colors on each player so it's obvious what team they're with
+* [x] Need to put team colors on each player so it's obvious what team they're with
 * [ ] Clean up the presentation on the arena
 * [ ] Add a ball
 * [ ] Add a scoreboard / time clock

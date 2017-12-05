@@ -140,6 +140,6 @@ const playerSort = (a, b) => {
   return a.name.localeCompare(b.name)
 }
 
-const avatar = p => `https://api.adorable.io/avatars/20/${p.firstName}-${p.lastName}`
+const avatar = p => `https://api.adorable.io/avatars/16/${p.firstName}-${p.lastName}`
 
 module.exports = { avatar, generatePlayers, generatePlayer, playerFilter, playerSort, POSITIONS }

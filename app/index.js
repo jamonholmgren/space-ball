@@ -26,7 +26,7 @@ const INITIAL_STATE = {
   schedule: [],
   week: 0,
   players: [],
-  team: 'a',
+  team: 'terrans',
   game: null,
   mercurians: { name: 'mercurians', wins: 0, losses: 0, players: [] },
   venusians: { name: 'venusians', wins: 0, losses: 0, players: [] },
