@@ -22,47 +22,31 @@ const PLAYER_STYLE = {
   overflow: 'hidden',
 }
 
-const ARENA_STYLE = {
-  width: '100%',
-  height: '400px',
-  backgroundColor: '#2C313C',
-  position: 'relative',
-}
-
-const coordinates = (position, leftright, topbottom) => {
+const coordinates = (position, side, i = 0) => {
+  const flip = (n) => side === 0 ? n : 100 - n
   return {
-    goalie: { [leftright]: `5%`, [topbottom]: `50%` },
-    defense: { [leftright]: `25%`, [topbottom]: `20%` },
-    center: { [leftright]: `45%`, [topbottom]: `50%` },
-    forward: { [leftright]: `65%`, [topbottom]: `80%` },
-    attack: { [leftright]: `80%`, [topbottom]: `30%` },
-  }[position]
+    goalie: { left: `${flip(5)}%`, top: `50%` },
+    defense: { left: `${flip(25)}%`, top: `20%` },
+    center: { left: `${flip(45)}%`, top: `50%` },
+    forward: { left: `${flip(65)}%`, top: `80%` },
+    attack: { left: `${flip(80)}%`, top: `30%` },
+  }[position] || { left: `${flip(i * 5 + 25)}%`, top: `${flip(-12)}%` }
 }
-
-function TeamBox(state, { team, lineup, side }) {
-  return div()
-}
-
-window.coords = []
 
 function Players(state, props) {
   const playerDivs = [0, 1].map(side => {
-    const team = state.game.teams[side]
     const lineup = state.game.lineups[side]
-    const players = state[team].players.sort(playerSort)
-    const topbottom = side === 0 ? 'top' : 'bottom'
-    const leftright = side === 0 ? 'left' : 'right'
+    const team = state[state.game.teams[side]]
+    const players = team.players.sort(playerSort)
 
     return players.map((p, i) => {
       const playing = keyForValue(lineup, p)
-      const coords = playing
-        ? coordinates(playing, leftright, topbottom)
-        : { [leftright]: `${i * 5 + 25}%`, [topbottom]: '-12%' }
+      const coords = coordinates(playing, side, i)
       
       const teamColor = {
-        backgroundColor: side === 0 ? '#6DDAFE' : '#C72B43'
+        backgroundColor: team.color
       }
-        
+      
       return div(
         [
           img(avatar(p), { title: p.name, style: { borderRadius: '8px 8px 0 0', overflow: 'hidden', } }), // avatar
@@ -87,7 +71,7 @@ function Players(state, props) {
         {
           style: Object.assign({}, PLAYER_STYLE, coords, teamColor),
           cache: `${side} - ${p.name}`,
-          animate: [ 'left', 'right', 'top', 'bottom' ],
+          animate: [ 'left', 'top' ],
         }
       )
     })
@@ -96,9 +80,48 @@ function Players(state, props) {
   return playerDivs
 }
 
+function Ball(state, props) {
+  let coords = { left: '50%', top: '50%' }
+  
+  const ball = state.game.ball
+  
+  if (POSITIONS.includes(ball.possession)) {
+    coords = coordinates(ball.possession, ball.side)
+  } else if (ball.possession === 'goal') {
+    coords = { left: ball.side === 0 ? '10%' : '90%', top: '50%' }
+  }
+  
+  return div([], {
+    style: Object.assign({}, {
+      position: 'absolute',
+      width: '30px',
+      height: '30px',
+      margin: '-15px -15px',
+      backgroundColor: 'red',
+      borderRadius: '15px',
+      boxShadow: '1px 1px 2px black',
+      transition: 'all 1.0s',
+    }, coords),
+    cache: 'ball',
+    animate: [ 'left', 'top' ],
+  })
+}
+
 function Arena(state, props) {
   const players = Players(state, props)
-  return div([].concat(players[0]).concat(players[1]), { style: ARENA_STYLE })
+  const ball = Ball(state, props)
+  return div([
+    ...players[0],
+    ...players[1],
+    ball
+  ], {
+    style: {
+      width: '100%',
+      height: '400px',
+      backgroundColor: '#2C313C',
+      position: 'relative',
+    }
+  })
 }
 
 function Game(state, props) {

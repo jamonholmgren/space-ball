@@ -45,11 +45,11 @@ yarn start
 ## Dev Notes
 
 * [x] ~Need to figure out animating using CSS transitions~
-* [x] Need to put team colors on each player so it's obvious what team they're with
-* [ ] Clean up the presentation on the arena
-* [ ] Add a ball
-* [ ] Add a scoreboard / time clock
+* [x] ~Need to put team colors on each player so it's obvious what team they're with~
+* [x] ~Add a ball~
 * [ ] Create faceoff state
+* [ ] Clean up the presentation on the arena
+* [ ] Add a scoreboard / time clock
 * [ ] Create passing ball between players
 * [ ] Create player AI so they know whether to pass or shoot
 * [ ] Create shot on goal

@@ -27,6 +27,10 @@ function nextGame(state) {
         attack: null,
       },
     ],
+    ball: {
+      side: 0,             // 0 or 1, depends what team has it -- or null if neither
+      possession: 'goalie',  // could be `center`, `forward`, etc
+    },
     score: [0, 0],
     time: 1000,
   }

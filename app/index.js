@@ -28,14 +28,14 @@ const INITIAL_STATE = {
   players: [],
   team: 'terrans',
   game: null,
-  mercurians: { name: 'mercurians', wins: 0, losses: 0, players: [] },
-  venusians: { name: 'venusians', wins: 0, losses: 0, players: [] },
-  terrans: { name: 'terrans', wins: 0, losses: 0, players: [] },
-  martians: { name: 'martians', wins: 0, losses: 0, players: [] },
-  jovians: { name: 'jovians', wins: 0, losses: 0, players: [] },
-  saturnians: { name: 'saturnians', wins: 0, losses: 0, players: [] },
-  uranians: { name: 'uranians', wins: 0, losses: 0, players: [] },
-  neptunians: { name: 'neptunians', wins: 0, losses: 0, players: [] },
+  mercurians: { name: 'mercurians', wins: 0, losses: 0, players: [], color: '#944B19' },
+  venusians: { name: 'venusians', wins: 0, losses: 0, players: [], color: '#EEDBBB' },
+  terrans: { name: 'terrans', wins: 0, losses: 0, players: [], color: '#455DC4' },
+  martians: { name: 'martians', wins: 0, losses: 0, players: [], color: '#FC845F' },
+  jovians: { name: 'jovians', wins: 0, losses: 0, players: [], color: '#E4EBDF' },
+  saturnians: { name: 'saturnians', wins: 0, losses: 0, players: [], color: '#BEA275' },
+  uranians: { name: 'uranians', wins: 0, losses: 0, players: [], color: '#598EF8' },
+  neptunians: { name: 'neptunians', wins: 0, losses: 0, players: [], color: '#4573FC' },
 }
 
 // Game state. This is where the magic happens.
@@ -72,12 +72,12 @@ function setTick(st) {
 }
 
 function autoSub(state) {
-  if (Object.values(state.game.lineups[0])[0]) {
-    
-  } else {
-    const lineups = autoSubstitution(state)
-    setState({ game: Object.assign({}, state.game, { lineups: lineups }) })
-  }
+  // TODO: will need to check substitutions more often
+  if (Object.values(state.game.lineups[0])[0]) return
+
+  const lineups = autoSubstitution(state)
+  const ball = { side: 1, possession: 'defense' }
+  setState({ game: Object.assign({}, state.game, { lineups: lineups, ball: ball }) })
 }
 
 function setState(newState) {
