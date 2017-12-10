@@ -62,21 +62,14 @@ function Players(state, props) {
               overflow: 'hidden',
             },
           }), // title
-          div(
-            div(`${Math.floor(p.energy)}`, {
-              style: {
-                width: `${p.energy / 2.5}px`,
-                height: '10px',
-                backgroundColor: '#4c905f',
-                fontSize: '8px',
-              },
-            }),
-            {
-              border: 'solid 1px #008570',
-              width: `40px`,
-              height: `8px`,
-            }
-          ),
+          div(`${Math.floor(p.energy)}`, {
+            style: {
+              width: `${p.energy / 2.5}px`,
+              height: '10px',
+              backgroundColor: '#4c905f',
+              fontSize: '8px',
+            },
+          }),
         ],
         {
           style: Object.assign({}, PLAYER_STYLE, coords, teamColor),
