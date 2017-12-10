@@ -1,4 +1,12 @@
 #! /bin/bash
 
-rm -rf ./build/Space\ Ball-*
-electron-packager .  --all --overwrite --out=build
+echo '🐘 Removing old files...'
+rm -rf ./build/Space\ Ball-* ./build-output.log
+echo '🐫 Building with electron-packager...'
+electron-packager .  --arch=x64 --platform=darwin,win32 --overwrite --out=build > ./build-output.log 2>./build-output.log
+echo '🦏 Compressing...'
+zip -rX ./build/Space\ Ball-win32-x64.zip ./build/Space\ Ball-win32-x64 > ./build-output.log
+zip -rX ./build/Space\ Ball-darwin-x64.zip ./build/Space\ Ball-darwin-x64 > ./build-output.log
+echo '🦍 Removing uncompressed folders...'
+rm -rf ./build/Space\ Ball-darwin-x64 ./build/Space\ Ball-win32-x64
+echo '🦖 Done (check build-output.log for any issues)'
