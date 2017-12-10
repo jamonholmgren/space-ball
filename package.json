@@ -1,7 +1,8 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "name": "space-ball",
+  "productName": "Space Ball",
+  "version": "0.1.0",
+  "description": "An Electron-powered game. Manage a club in a fictional sport, Space Ball.",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
@@ -14,11 +15,10 @@
     "tutorial",
     "demo"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Jamon Holmgren",
+  "license": "MIT",
   "devDependencies": {
-    "electron": "1.8.2-beta.2",
-    "roundrobin": "^1.0.3"
+    "electron": "1.8.2-beta.2"
   },
   "prettier": {
     "bracketSpacing": true,
@@ -32,6 +32,7 @@
     "useTabs": false
   },
   "dependencies": {
-    "electron-json-storage": "^4.0.2"
+    "electron-json-storage": "^4.0.2",
+    "roundrobin": "^1.0.3"
   }
 }
