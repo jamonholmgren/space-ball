@@ -14,7 +14,7 @@ function heal(st) {
   }
 
   // update all energy to 100
-  TEAMS.forEach(t => st[t].players.forEach(p => (p.energy = 100)))
+  TEAMS.forEach(t => st[t] && st[t].players.forEach(p => (p.energy = 100)))
 
   // have to restart any games
   if (st.status === 'game') {

@@ -18,7 +18,7 @@
   "author": "Jamon Holmgren",
   "license": "MIT",
   "devDependencies": {
-    "electron": "1.8.2-beta.2"
+    "electron": "1.8.2-beta.3"
   },
   "prettier": {
     "bracketSpacing": true,

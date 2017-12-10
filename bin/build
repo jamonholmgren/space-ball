@@ -1,0 +1,4 @@
+#! /bin/bash
+
+rm -rf ./build/Space\ Ball-*
+electron-packager .  --all --overwrite --out=build
