@@ -1,4 +1,5 @@
 const { POSITIONS } = require('./players')
+const { TEAMS, findTeam } = require('./teams')
 const { rand } = require('./utils')
 
 const autoDraftPlayer = state => {
@@ -12,7 +13,7 @@ const autoDraftPlayer = state => {
 
   // figure out what positions we need to draft for
   let needs = POSITIONS.filter(
-    pos => state[state.drafting].players.filter(p => p.position === pos).length < 1
+    pos => findTeam(state, state.drafting).players.filter(p => p.position === pos).length < 1
   )
 
   // if no current needs, then draft whoever is best
@@ -37,4 +38,21 @@ const autoDraftPlayer = state => {
   return remainingPlayers[0]
 }
 
-module.exports = { autoDraftPlayer }
+function draft(state, player) {
+  if (!player) return
+
+  const team = findTeam(state, state.drafting)
+  player.team = team.name
+  const nextTeam = TEAMS[TEAMS.indexOf(team.name) + 1] || TEAMS[0]
+  return {
+    teams: state.teams.map(t => {
+      if (t.name !== team.name) return t
+      return Object.assign({}, team, {
+        players: [...team.players, player],
+      })
+    }),
+    drafting: nextTeam,
+  }
+}
+
+module.exports = { draft, autoDraftPlayer }

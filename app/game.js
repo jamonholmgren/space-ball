@@ -1,9 +1,10 @@
 const { POSITIONS } = require('./players')
+const { findTeam } = require('./teams')
 
 // returns an optimized lineup for each team in the current game
 const autoSubstitution = state => {
-  return state.game.teams.map((name) => {
-    const players = state[name].players
+  return state.game.teams.map(name => {
+    const players = findTeam(state, name).players
     // finding the right lineup is complex
     // first, we rank all the players for each position
     // keeping in mind their preferred position
@@ -64,4 +65,20 @@ const autoSubstitution = state => {
   })
 }
 
-module.exports = { autoSubstitution }
+function autoSub(state) {
+  if (Object.values(state.game.lineups[0])[0]) return
+
+  const lineups = autoSubstitution(state)
+  const ball = { side: 1, possession: 'defense' }
+  return { game: Object.assign({}, state.game, { lineups: lineups, ball: ball }) }
+}
+
+function gameTick(state) {
+  const st = autoSub(state)
+  return st
+}
+
+module.exports = {
+  autoSubstitution,
+  gameTick,
+}

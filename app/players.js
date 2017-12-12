@@ -2,6 +2,7 @@ const { randomFirst, randomLast } = require('./names')
 const { rand } = require('./utils')
 
 const POSITIONS = ['attack', 'forward', 'center', 'defense', 'goalie']
+
 const randPosition = () => POSITIONS[rand(0, 4)]
 
 const playerFilter = filter => p => {
@@ -130,7 +131,6 @@ const generatePlayer = () => {
   p.report = playerReport(p)
   return p
 }
-const generatePlayers = num => [...Array(num)].map(generatePlayer)
 
 const playerSort = (a, b) => {
   let s = POSITIONS.indexOf(a.position) - POSITIONS.indexOf(b.position)
@@ -140,6 +140,15 @@ const playerSort = (a, b) => {
   return a.name.localeCompare(b.name)
 }
 
+const generatePlayers = (state, num) => ({ players: [...Array(num)].map(generatePlayer) })
+
 const avatar = p => `https://api.adorable.io/avatars/16/${p.firstName}-${p.lastName}`
 
-module.exports = { avatar, generatePlayers, generatePlayer, playerFilter, playerSort, POSITIONS }
+module.exports = {
+  avatar,
+  generatePlayers,
+  generatePlayer,
+  playerFilter,
+  playerSort,
+  POSITIONS,
+}

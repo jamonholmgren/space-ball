@@ -1,6 +1,7 @@
 const { div, span, create, img } = require('../dom')
 const { keyForValue } = require('../utils')
 const { POSITIONS, playerSort, avatar } = require('../players')
+const { findTeam } = require('../teams')
 
 const TEAM_BOX_STYLE = {
   position: 'relative',
@@ -40,7 +41,7 @@ const coordinates = (position, side, i = 0) => {
 function Players(state, props) {
   const playerDivs = [0, 1].map(side => {
     const lineup = state.game.lineups[side]
-    const team = state[state.game.teams[side]]
+    const team = findTeam(state, state.game.teams[side])
     const players = team.players.sort(playerSort)
 
     return players.map((p, i) => {

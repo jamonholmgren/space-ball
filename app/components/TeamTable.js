@@ -1,9 +1,10 @@
 const { table, button, create, img } = require('../dom')
 const { POSITIONS, playerFilter, playerSort } = require('../players')
+const { findTeam } = require('../teams')
 
 function TeamTable(state, { onDraft, team }) {
   team = team || state.drafting || state.team
-  const players = state[team].players
+  const players = findTeam(state, team).players
 
   return table([
     [

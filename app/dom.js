@@ -34,7 +34,7 @@ const apply = (el, props) => {
           // for animation, we set this attribute slightly afterward
           // don't ask, this is hacky and horrible
           const set = () => (el.style[k] = props[key][k])
-          
+
           // okay, you asked. so the reason is because we add the element
           // back into the dom, and then when we (slightly later) update
           // the left/right/top/bottom/etc, CSS transition kicks in.
@@ -56,16 +56,16 @@ const apply = (el, props) => {
 // creates an element of type with children and properties
 // e.g.
 //   element('h1')('Hello there', { style: { backgroundColor: 'red' } })
-const create = tag => (children, props={}) => {
+const create = tag => (children, props = {}) => {
   // load from cache if provided in props
   let el = props.cache ? cache[props.cache] : null
   el = el || document.createElement(tag)
-  
+
   if (props.cache) {
     clearAll(el)
     cache[props.cache] = el
   }
-  
+
   if (typeof children === 'string') {
     el.innerHTML = children
   } else {
@@ -81,10 +81,13 @@ const create = tag => (children, props={}) => {
 // e.g.
 //   table([[ 'hey', 'there' ], [ 1, element ]])
 const table = (t, props) =>
-  create('table')([
-    t[0] && create('thead')(create('tr')(t[0].map(cell => create('th')(cell)))),
-    create('tbody')(t.slice(1).map(row => create('tr')(row.map(cell => create('td')(cell))))),
-  ], props)
+  create('table')(
+    [
+      t[0] && create('thead')(create('tr')(t[0].map(cell => create('th')(cell)))),
+      create('tbody')(t.slice(1).map(row => create('tr')(row.map(cell => create('td')(cell))))),
+    ],
+    props
+  )
 
 // just some sugar for `create`
 const div = create('div')
